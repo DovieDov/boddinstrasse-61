@@ -66,9 +66,17 @@ p{margin:0}
 .opt .cost{font-family:var(--font-mono);font-size:13px;color:var(--muted);grid-column:1}
 .opt .votes{grid-row:1/3;grid-column:2;font-family:var(--font-mono);font-size:14px;font-weight:500;text-align:right;font-variant-numeric:tabular-nums}
 .opt .mine{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
-details{font-size:13px;color:var(--muted)}
-summary{cursor:pointer}
-.who{margin-top:6px;display:flex;flex-direction:column;gap:2px}
+details{font-size:14px;color:var(--ink);border:1px solid var(--line);border-radius:6px}
+summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;font-weight:600}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";width:8px;height:8px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);margin:-4px 2px 0 0;flex:none}
+details[open] summary::after{transform:rotate(-135deg);margin:4px 2px 0 0}
+summary:hover{background:var(--accent-soft)}
+summary .cnt{font-family:var(--font-mono);font-weight:400;color:var(--muted);font-size:13px;margin-left:auto}
+.who{display:flex;flex-direction:column;gap:10px;padding:4px 12px 12px;border-top:1px solid var(--line);color:var(--muted)}
+.who .grp{display:flex;flex-direction:column;gap:2px;padding-top:8px}
+.who .grp b{color:var(--ink);font-size:13px}
+.who .grp span{padding-left:10px}
 section.budget{display:flex;flex-direction:column;gap:14px}
 .tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px}
 table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
@@ -321,13 +329,16 @@ function renderInits(){
     });
     const det = document.createElement('details'); det.open = openWho.has(it.id);
     det.addEventListener('toggle', () => { det.open ? openWho.add(it.id) : openWho.delete(it.id); });
-    const sum = document.createElement('summary'); sum.textContent = t.who; det.append(sum);
+    const sum = document.createElement('summary'); const sl = document.createElement('span'); sl.textContent = t.who; const sc = document.createElement('span'); sc.className='cnt'; sc.textContent = String(mine.length); sum.append(sl, sc); det.append(sum);
     const who = document.createElement('div'); who.className='who';
     if (!mine.length){ const p=document.createElement('span'); p.textContent=t.nobody; who.append(p); }
-    mine.slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(v => {
-      const o = it.opts.find(x => x.id===v.opt); const p=document.createElement('span');
-      p.textContent = v.name + (v.unit ? ' ('+v.unit+')' : '') + ' – ' + (o ? o[lang] : v.opt);
-      who.append(p);
+    it.opts.forEach(o => {   // names grouped under the choice they made
+      const names = mine.filter(v => v.opt===o.id).sort((a,b)=>a.name.localeCompare(b.name));
+      if (!names.length) return;
+      const g = document.createElement('div'); g.className='grp';
+      const gh = document.createElement('b'); gh.textContent = o[lang] + ' (' + names.length + ')'; g.append(gh);
+      names.forEach(v => { const p=document.createElement('span'); p.textContent = v.name + (v.unit ? ' ('+v.unit+')' : ''); g.append(p); });
+      who.append(g);
     });
     det.append(who);
     if (it.flag){ const f=document.createElement('p'); f.className='flag'; f.textContent=it.flag[lang]; card.append(head, f, issue, opts, det); }
