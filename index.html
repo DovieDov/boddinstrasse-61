@@ -90,6 +90,17 @@ tr.neg td.n{color:var(--warn)}
 .kpi .k{font-size:12px;color:var(--muted)}
 .kpi .v{font-family:var(--font-mono);font-size:20px;font-weight:500}
 .small{font-size:13px;color:var(--muted)}
+.plan .planbody{display:flex;flex-direction:column;gap:12px;padding:12px;border-top:1px solid var(--line)}
+.plan .planbody .tablewrap{border-radius:6px;overflow-x:visible}
+.plan table{table-layout:fixed;width:100%}
+.plan th,.plan td{padding:8px 6px;font-size:13px;overflow-wrap:anywhere}
+.plan th{font-size:10px;letter-spacing:.02em;overflow-wrap:normal;white-space:nowrap}
+.plan th:not(:first-child),.plan td.n{text-align:right;padding-left:2px;padding-right:8px}
+.plan td.n{font-size:12px;white-space:nowrap}
+.plan th:nth-child(1){width:38%}.plan th:nth-child(2){width:21%}.plan th:nth-child(3){width:22%}.plan th:nth-child(4){width:19%}
+.plan td:first-child{hyphens:auto;overflow-wrap:break-word;font-size:12.5px;padding-right:2px}
+.plan td.over{color:var(--warn);font-weight:700}
+.plan tr.sub td{color:var(--muted);font-size:13px}
 .sources{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
 .sources a{color:var(--accent)}
 @media (max-width:560px){.voter{grid-template-columns:1fr}.cards{grid-template-columns:1fr}h1{font-size:25px}}
@@ -126,6 +137,15 @@ tr.neg td.n{color:var(--warn)}
     <p class="flag" data-t="budgetFlag"></p>
     <p class="small" data-t="budgetLede"></p>
     <div class="tablewrap"><table id="costs"></table></div>
+    <details class="plan" id="plan">
+      <summary><span data-t="planTitle"></span></summary>
+      <div class="planbody">
+        <p class="small" data-t="planLede"></p>
+        <div class="tablewrap"><table id="planTbl"></table></div>
+        <p class="small" id="planFoot"></p>
+        <p class="small" data-t="planNote"></p>
+      </div>
+    </details>
     <h3 data-t="b27Title"></h3>
     <div class="cards" id="kpis"></div>
     <div class="tablewrap"><table id="b27"></table></div>
@@ -231,6 +251,24 @@ const COSTS = [
   ['Sonstiges / Rückzahlungen / Gebühren','Other / refunds / fees',1633.93]
 ];
 
+// Wirtschaftsplan 2026 (Gesamtkosten fürs ganze Haus) against what the bank statement shows so far. plan = whole-year plan, null = no matching plan line.
+const PLAN_VS = [
+  ['Wasser und Abwasser','Water and drainage', 11000, 6362.00],
+  ['Müll und Straßenreinigung','Waste and street cleaning', 9730, 2675.99],
+  ['Hausmeister','Caretaker', 5000, 4835.07],
+  ['Versicherungen','Insurance', 4000, 4375.74],
+  ['Allgemeinstrom, Beleuchtung','Shared electricity, lighting', 700, 988.40],
+  ['Verwaltung (Matera)','Management (Matera)', 10285, 19991.72],
+  ['Reparaturen, Instandhaltung','Repairs, maintenance', 9000, 14104.61],
+  ['Rechts- und Beratung','Legal and advisory', 2000, 2918.02],
+  ['Sonstiges (Gebühren, Saalmiete)','Other (fees, meeting room)', 690, 1633.93],
+  ['Hausreinigung, Garten, Winterdienst u. a.','Cleaning, garden, winter service etc.', 7800, null],
+  ['Heizung (Abrechnung Ista)','Heating (Ista bill)', null, 13116.00],
+  ['Verbrauchsablesung (ista)','Meter reading (ista)', null, 1053.06],
+  ['Mehrere Dienstleister','Several providers', null, 29066.44]
+];
+const PLAN_RESERVE = 25000;
+
 const B27 = [
   {de:'Einnahmen: regelmäßige Hausgeldzahlungen', en:'Income: regular owner payments', lo:90700, hi:106400},
   {de:'Laufende Kosten (ohne Reparaturen und Anwalt)', en:'Running costs (without repairs and legal)', lo:-110000, hi:-110000},
@@ -250,6 +288,7 @@ const T = {
     yours:'Ihre Wahl', who:'Wer hat abgestimmt?', nobody:'Noch keine Stimmen.', frontOnly:'Nur Vorderhaus',
     budgetTitle:'Ausgaben 2026 und Budget 2027', budgetFlag:'Benötigt Matera-Bericht zu den erforderlichen Zusatzausgaben in diesem Jahr und den erwarteten Ausgaben für 2027', budgetLede:'Ausgaben vom 24. Februar bis 26. Oktober 2026 laut Kontoauszug.',
     colType:'Art', colAmt:'Betrag', total26:'Gesamt', b27Title:'Realistisches Budget 2027',
+    planTitle:'Plan 2026 und tatsächliche Ausgaben', planLede:'Was die Hausverwaltung für 2026 geplant hat und was bisher bezahlt wurde.', planCols:['Posten','Plan 2026','Bezahlt','% Plan'], planTotal:'Summe', planNoLine:'kein Planposten', planNoPay:'keine eigene Zahlung', planDash:'Ein Strich heißt: Dafür gibt es keinen passenden Planposten bzw. keine eigene Zahlung.', planFoot:'Plan ohne Heizung und ohne Zuführung zur Instandhaltungsrücklage', planNote:'Plan: Wirtschaftsplan 2026 der Hausverwaltung vom 4. Nov. 2025 (Gesamtkosten fürs Haus). Bisher bezahlt: Zahlungen vom 24. Feb. bis 26. Okt. 2026 laut Kontoauszug, also noch nicht das ganze Jahr. Die Zuordnung der Zahlungen zu den Planposten ist unsere Näherung: Mehrere Zahlungen, etwa an „Mehrere Dienstleister“, lassen sich keinem Planposten sicher zuordnen. Heizkosten werden nach Verbrauch abgerechnet und stehen nicht als Hausbetrag im Plan. Zusätzlich plant die Verwaltung 25.000 € Zuführung zur Instandhaltungsrücklage; das ist keine Ausgabe.',
     kRes:'Rücklage heute', kGap:'Erwartetes Ergebnis 2027', kAvail:'Verfügbar für Maßnahmen 2027',
     b27Note:'Schätzung: Einnahmen aus den regelmäßigen Monatszahlungen (untere Grenze) bzw. dem Durchschnitt 2026 inkl. Nachzahlungen (obere Grenze). Laufende Kosten = Ausgaben 2026 ohne Reparaturen und Anwalt, auf 12 Monate hochgerechnet; die großen Einmalbuchungen (Matera 8.058,68 € und 6.868,68 €, Mehrere Dienstleister 12.837,60 €) einmal pro Jahr gezählt. Verfügbar = Rücklage minus erwartetes Defizit minus 10.000 € Sicherheitspuffer. Der Aufzug müsste gesondert von den Eigentümern im Vorderhaus finanziert werden.',
     srcTitle:'Quellen der Kostenschätzungen', srcNote:'Gebäudeannahmen: 30 Wohnungen, ca. 500 m² Gemeinschaftsflächen, Vorderhaus mit ca. 15 Wohnungen und 5 Etagen.'},
@@ -264,6 +303,7 @@ const T = {
     yours:'Your choice', who:'Who voted?', nobody:'No votes yet.', frontOnly:'Front building only',
     budgetTitle:'2026 costs and 2027 budget', budgetFlag:'Needs Matera report on required extra spending this year and expected spending for 2027', budgetLede:'Outgoing payments from Feb 24 to Oct 26, 2026, from the bank statement.',
     colType:'Type', colAmt:'Amount', total26:'Total', b27Title:'Realistic budget for 2027',
+    planTitle:'2026 plan vs. actual spending', planLede:'What the management planned for 2026 and what has been paid so far.', planCols:['Item','Plan 2026','Paid','% plan'], planTotal:'Total', planNoLine:'no plan line', planNoPay:'no payment of its own', planDash:'A dash means there is no matching plan line, or no payment of its own.', planFoot:'Plan excludes heating and the transfer to the maintenance reserve', planNote:'Plan: the management’s 2026 Wirtschaftsplan of 4 Nov 2025 (whole-building totals). Paid so far: payments from 24 Feb to 26 Oct 2026 from the bank statement, so not the full year yet. How payments are matched to plan lines is our own approximation: several payments, for example to “Mehrere Dienstleister”, can’t be matched to a plan line with certainty. Heating is billed by consumption and is not in the plan as a building total. The management also plans a €25,000 transfer to the maintenance reserve; that is not an expense.',
     kRes:'Reserve today', kGap:'Expected result 2027', kAvail:'Available for projects in 2027',
     b27Note:'Estimate: income from regular monthly payments (low end) or the 2026 average including catch-up payments (high end). Running costs are 2026 costs without repairs and legal, scaled to 12 months, with the large one-off debits (Matera €8,058.68 and €6,868.68, Mehrere Dienstleister €12,837.60) counted once a year. Available = reserve minus the expected shortfall minus a €10,000 safety buffer. The elevator would need separate funding from the front-building owners.',
     srcTitle:'Sources for the cost estimates', srcNote:'Building assumptions: 30 flats, about 500 m² of shared areas, front building with about 15 flats and 5 floors.'}
@@ -354,6 +394,23 @@ function renderBudget(){
   let total = 0;
   COSTS.forEach(c => { total += c[2]; const r=tb.insertRow(); r.insertCell().textContent = lang==='de'?c[0]:c[1]; const d=r.insertCell(); d.className='n'; d.textContent=new Intl.NumberFormat(lang==='de'?'de-DE':'en-GB',{style:'currency',currency:'EUR'}).format(c[2]); });
   const s = tb.insertRow(); s.className='sum'; s.insertCell().textContent=t.total26; const sd=s.insertCell(); sd.className='n'; sd.textContent=new Intl.NumberFormat(lang==='de'?'de-DE':'en-GB',{style:'currency',currency:'EUR'}).format(total);
+
+  const pt = document.getElementById('planTbl'); pt.textContent='';
+  const ph = pt.insertRow(); t.planCols.forEach((x,i)=>{const th=document.createElement('th');th.textContent=x;if(i)th.style.textAlign='right';ph.append(th);});
+  const money = v => new Intl.NumberFormat(lang==='de'?'de-DE':'en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v);
+  let planSum = 0, paidSum = 0;
+  PLAN_VS.forEach(r => {
+    const [de,en,plan,paid] = r; if (plan!=null) planSum += plan; if (paid!=null) paidSum += paid;
+    const row = pt.insertRow(); row.insertCell().textContent = lang==='de'?de:en;
+    const c1=row.insertCell(); c1.className='n'; c1.textContent = plan==null ? '–' : money(plan);
+    const c2=row.insertCell(); c2.className='n'; c2.textContent = paid==null ? '–' : money(paid);
+    const c3=row.insertCell(); c3.className='n';
+    if (plan!=null && paid!=null){ const pc = Math.round(paid/plan*100); c3.textContent = pc+' %'; if (pc>100) c3.classList.add('over'); }
+    else c3.textContent = '–';
+  });
+  const ts = pt.insertRow(); ts.className='sum'; ts.insertCell().textContent = t.planTotal;
+  const s1=ts.insertCell(); s1.className='n'; s1.textContent = money(planSum); const s2=ts.insertCell(); s2.className='n'; s2.textContent = money(paidSum); ts.insertCell();
+  document.getElementById('planFoot').textContent = t.planFoot + ': ' + money(PLAN_RESERVE) + '. ' + t.planDash;
 
   const b = document.getElementById('b27'); b.textContent='';
   const h2 = b.insertRow(); [t.colType, t.colAmt].forEach((x,i)=>{const th=document.createElement('th');th.textContent=x;if(i)th.style.textAlign='right';h2.append(th);});
