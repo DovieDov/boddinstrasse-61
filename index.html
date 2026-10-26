@@ -90,6 +90,15 @@ tr.neg td.n{color:var(--warn)}
 .kpi .k{font-size:12px;color:var(--muted)}
 .kpi .v{font-family:var(--font-mono);font-size:20px;font-weight:500}
 .small{font-size:13px;color:var(--muted)}
+.prio{display:flex;flex-direction:column;gap:6px}
+.prio .lbl{font-size:13px;font-weight:600}
+.prio .seg{display:flex;gap:8px}
+.prio .seg button{flex:1;min-width:0;border:1px solid var(--line);border-radius:6px;padding:9px 6px;background:transparent;color:var(--ink);font:600 13px var(--font-body);cursor:pointer}
+.prio .seg button:hover{border-color:var(--accent)}
+.prio .seg button[aria-pressed="true"]{background:#111;color:#fff;border-color:#111}
+:root[data-theme="dark"] .prio .seg button[aria-pressed="true"]{box-shadow:0 0 0 1px #5d686e}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .prio .seg button[aria-pressed="true"]{box-shadow:0 0 0 1px #5d686e}}
+.prio .cnts{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
 .plan .planbody{display:flex;flex-direction:column;gap:12px;padding:12px;border-top:1px solid var(--line)}
 .plan .planbody .tablewrap{border-radius:6px;overflow-x:visible}
 .plan table{table-layout:fixed;width:100%}
@@ -289,6 +298,7 @@ const T = {
     budgetTitle:'Ausgaben 2026 und Budget 2027', budgetFlag:'Benötigt Matera-Bericht zu den erforderlichen Zusatzausgaben in diesem Jahr und den erwarteten Ausgaben für 2027', budgetLede:'Ausgaben vom 24. Februar bis 26. Oktober 2026 laut Kontoauszug.',
     colType:'Art', colAmt:'Betrag', total26:'Gesamt', b27Title:'Realistisches Budget 2027',
     planTitle:'Plan 2026 und tatsächliche Ausgaben', planLede:'Was die Hausverwaltung für 2026 geplant hat und was bisher bezahlt wurde.', planCols:['Posten','Plan 2026','Bezahlt','% Plan'], planTotal:'Summe', planNoLine:'kein Planposten', planNoPay:'keine eigene Zahlung', planDash:'Ein Strich heißt: Dafür gibt es keinen passenden Planposten bzw. keine eigene Zahlung.', planFoot:'Plan ohne Heizung und ohne Zuführung zur Instandhaltungsrücklage', planNote:'Plan: Wirtschaftsplan 2026 der Hausverwaltung vom 4. Nov. 2025 (Gesamtkosten fürs Haus). Bisher bezahlt: Zahlungen vom 24. Feb. bis 26. Okt. 2026 laut Kontoauszug, also noch nicht das ganze Jahr. Die Zuordnung der Zahlungen zu den Planposten ist unsere Näherung: Mehrere Zahlungen, etwa an „Mehrere Dienstleister“, lassen sich keinem Planposten sicher zuordnen. Heizkosten werden nach Verbrauch abgerechnet und stehen nicht als Hausbetrag im Plan. Zusätzlich plant die Verwaltung 25.000 € Zuführung zur Instandhaltungsrücklage; das ist keine Ausgabe.',
+    prioLabel:'Wie wichtig ist Ihnen das?', prioNames:{high:'Hoch',medium:'Mittel',low:'Niedrig'}, prioHead:'Priorität', prioCount:(h,m,l)=>'Hoch '+h+' · Mittel '+m+' · Niedrig '+l, prioSaved:'Ihre Priorität wurde gespeichert.',
     kRes:'Rücklage heute', kGap:'Erwartetes Ergebnis 2027', kAvail:'Verfügbar für Maßnahmen 2027',
     b27Note:'Schätzung: Einnahmen aus den regelmäßigen Monatszahlungen (untere Grenze) bzw. dem Durchschnitt 2026 inkl. Nachzahlungen (obere Grenze). Laufende Kosten = Ausgaben 2026 ohne Reparaturen und Anwalt, auf 12 Monate hochgerechnet; die großen Einmalbuchungen (Matera 8.058,68 € und 6.868,68 €, Mehrere Dienstleister 12.837,60 €) einmal pro Jahr gezählt. Verfügbar = Rücklage minus erwartetes Defizit minus 10.000 € Sicherheitspuffer. Der Aufzug müsste gesondert von den Eigentümern im Vorderhaus finanziert werden.',
     srcTitle:'Quellen der Kostenschätzungen', srcNote:'Gebäudeannahmen: 30 Wohnungen, ca. 500 m² Gemeinschaftsflächen, Vorderhaus mit ca. 15 Wohnungen und 5 Etagen.'},
@@ -304,6 +314,7 @@ const T = {
     budgetTitle:'2026 costs and 2027 budget', budgetFlag:'Needs Matera report on required extra spending this year and expected spending for 2027', budgetLede:'Outgoing payments from Feb 24 to Oct 26, 2026, from the bank statement.',
     colType:'Type', colAmt:'Amount', total26:'Total', b27Title:'Realistic budget for 2027',
     planTitle:'2026 plan vs. actual spending', planLede:'What the management planned for 2026 and what has been paid so far.', planCols:['Item','Plan 2026','Paid','% plan'], planTotal:'Total', planNoLine:'no plan line', planNoPay:'no payment of its own', planDash:'A dash means there is no matching plan line, or no payment of its own.', planFoot:'Plan excludes heating and the transfer to the maintenance reserve', planNote:'Plan: the management’s 2026 Wirtschaftsplan of 4 Nov 2025 (whole-building totals). Paid so far: payments from 24 Feb to 26 Oct 2026 from the bank statement, so not the full year yet. How payments are matched to plan lines is our own approximation: several payments, for example to “Mehrere Dienstleister”, can’t be matched to a plan line with certainty. Heating is billed by consumption and is not in the plan as a building total. The management also plans a €25,000 transfer to the maintenance reserve; that is not an expense.',
+    prioLabel:'How important is this to you?', prioNames:{high:'High',medium:'Medium',low:'Low'}, prioHead:'Priority', prioCount:(h,m,l)=>'High '+h+' · Medium '+m+' · Low '+l, prioSaved:'Your priority was saved.',
     kRes:'Reserve today', kGap:'Expected result 2027', kAvail:'Available for projects in 2027',
     b27Note:'Estimate: income from regular monthly payments (low end) or the 2026 average including catch-up payments (high end). Running costs are 2026 costs without repairs and legal, scaled to 12 months, with the large one-off debits (Matera €8,058.68 and €6,868.68, Mehrere Dienstleister €12,837.60) counted once a year. Available = reserve minus the expected shortfall minus a €10,000 safety buffer. The elevator would need separate funding from the front-building owners.',
     srcTitle:'Sources for the cost estimates', srcNote:'Building assumptions: 30 flats, about 500 m² of shared areas, front building with about 15 flats and 5 floors.'}
@@ -312,6 +323,8 @@ const T = {
 let lang = 'de';
 try { lang = localStorage.getItem('lang') || 'de'; } catch(e) {}
 let votes = [];       // [{init, opt, name, unit}]
+let prios = [];       // [{init, priority, name, unit}]  (high / medium / low per initiative and name)
+let prioReady = false; // the priority table exists on the server; the controls stay hidden until it does
 let statusMsg = null;
 const openWho = new Set();   // initiatives whose "Who voted?" list is open
 
@@ -367,11 +380,28 @@ function renderInits(){
       b.addEventListener('click', () => castVote(it.id, o.id));
       opts.append(b);
     });
+    const myPrio = prios.filter(v => v.init === it.id);
+    let prio = null;
+    if (prioReady){
+      prio = document.createElement('div'); prio.className='prio';
+      const pl = document.createElement('span'); pl.className='lbl'; pl.textContent = t.prioLabel;
+      const seg = document.createElement('div'); seg.className='seg';
+      ['high','medium','low'].forEach(pid => {
+        const pb = document.createElement('button'); pb.type='button'; pb.textContent = t.prioNames[pid];
+        pb.setAttribute('aria-pressed', me && myPrio.some(v => v.priority===pid && key(v.name)===me) ? 'true' : 'false');
+        pb.addEventListener('click', () => setPriority(it.id, pid));
+        seg.append(pb);
+      });
+      const cnt = document.createElement('span'); cnt.className='cnts';
+      const n = pid => myPrio.filter(v => v.priority===pid).length;
+      cnt.textContent = t.prioCount(n('high'), n('medium'), n('low'));
+      prio.append(pl, seg, cnt);
+    }
     const det = document.createElement('details'); det.open = openWho.has(it.id);
     det.addEventListener('toggle', () => { det.open ? openWho.add(it.id) : openWho.delete(it.id); });
-    const sum = document.createElement('summary'); const sl = document.createElement('span'); sl.textContent = t.who; const sc = document.createElement('span'); sc.className='cnt'; sc.textContent = String(mine.length); sum.append(sl, sc); det.append(sum);
+    const sum = document.createElement('summary'); const sl = document.createElement('span'); sl.textContent = t.who; const sc = document.createElement('span'); sc.className='cnt'; sc.textContent = String(new Set([...mine, ...myPrio].map(v => key(v.name))).size); sum.append(sl, sc); det.append(sum);
     const who = document.createElement('div'); who.className='who';
-    if (!mine.length){ const p=document.createElement('span'); p.textContent=t.nobody; who.append(p); }
+    if (!mine.length && !myPrio.length){ const p=document.createElement('span'); p.textContent=t.nobody; who.append(p); }
     it.opts.forEach(o => {   // names grouped under the choice they made
       const names = mine.filter(v => v.opt===o.id).sort((a,b)=>a.name.localeCompare(b.name));
       if (!names.length) return;
@@ -380,9 +410,20 @@ function renderInits(){
       names.forEach(v => { const p=document.createElement('span'); p.textContent = v.name + (v.unit ? ' ('+v.unit+')' : ''); g.append(p); });
       who.append(g);
     });
+    if (prioReady && myPrio.length){   // names grouped by the priority they gave
+      const ph = document.createElement('div'); ph.className='grp'; const phb = document.createElement('b'); phb.textContent = t.prioHead; ph.append(phb); who.append(ph);
+      ['high','medium','low'].forEach(pid => {
+        const names = myPrio.filter(v => v.priority===pid).sort((a,b)=>a.name.localeCompare(b.name)); if (!names.length) return;
+        const g = document.createElement('div'); g.className='grp';
+        const gh = document.createElement('b'); gh.textContent = t.prioNames[pid] + ' (' + names.length + ')'; g.append(gh);
+        names.forEach(v => { const p=document.createElement('span'); p.textContent = v.name + (v.unit ? ' ('+v.unit+')' : ''); g.append(p); });
+        who.append(g);
+      });
+    }
     det.append(who);
-    if (it.flag){ const f=document.createElement('p'); f.className='flag'; f.textContent=it.flag[lang]; card.append(head, f, issue, opts, det); }
-    else card.append(head, issue, opts, det);
+    const parts = it.flag ? (() => { const f=document.createElement('p'); f.className='flag'; f.textContent=it.flag[lang]; return [head, f, issue, opts]; })() : [head, issue, opts];
+    if (prio) parts.push(prio);
+    card.append(...parts, det);
     main.append(card);
   });
 }
@@ -436,9 +477,17 @@ const SB_URL = 'https://dxyaceoaqbgirjwidofq.supabase.co', SB_KEY = 'sb_publisha
 let sb = null;
 try { sb = window.supabase.createClient(SB_URL, SB_KEY); } catch(e) {}
 let loading = false;
+async function loadPrios(){
+  if (!sb) return;
+  const { data, error } = await sb.from('boddinstrasse_61_priority').select('init,priority,name,unit,updated_at').order('updated_at', {ascending:true}).limit(5000);
+  if (error){ if (prioReady){ /* keep what we have */ } return; }
+  prioReady = true;
+  prios = (data||[]).map(v => ({init:v.init, priority:v.priority, name:String(v.name||''), unit:String(v.unit||'')}));
+}
 async function loadVotes(){
   if (!sb || loading) return; loading = true;
   try {
+    await loadPrios();
     const { data, error } = await sb.from('boddinstrasse_61').select('init,opt,name,unit,updated_at').order('updated_at', {ascending:true}).limit(2000);
     if (error){ if (!votes.length) setStatus('offline','warn'); }
     else {
@@ -447,6 +496,14 @@ async function loadVotes(){
       synced = new Date().toISOString(); renderInits(); renderSynced();
     }
   } finally { loading = false; }
+}
+
+async function setPriority(initId, prio){
+  if (!myName()){ setStatus('needName','warn'); document.getElementById('name').focus(); return; }
+  if (!sb){ setStatus('failed','warn'); return; }
+  const { error } = await sb.rpc('set_priority', { p_init: initId, p_priority: prio, p_name: myName(), p_unit: (document.getElementById('unit').value || '').trim() });
+  if (error){ setStatus('failed','warn'); return; }
+  setStatus('prioSaved'); loadVotes();
 }
 
 async function castVote(initId, optId){
@@ -468,7 +525,7 @@ document.getElementById('lang-en').addEventListener('click',()=>setLang('en'));
 document.getElementById('voter').addEventListener('submit', e => e.preventDefault());
 loadVotes();
 if (sb){
-  try { sb.channel('votes').on('postgres_changes', {event:'*', schema:'public', table:'boddinstrasse_61'}, () => loadVotes()).subscribe(); } catch(e) {}
+  try { sb.channel('votes').on('postgres_changes', {event:'*', schema:'public', table:'boddinstrasse_61'}, () => loadVotes()).on('postgres_changes', {event:'*', schema:'public', table:'boddinstrasse_61_priority'}, () => loadVotes()).subscribe(); } catch(e) {}
   setInterval(loadVotes, 30000);
 }
 
