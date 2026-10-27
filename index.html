@@ -185,7 +185,7 @@ const eur = (n, lang) => new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-GB'
 const range = (a, b, lang) => a === 0 && b === 0 ? '–' : a === b ? eur(a, lang) : eur(a, lang) + ' – ' + eur(b, lang);
 
 const INITS = [
-  { id:'reserve', title:{de:'Rücklage (Notfallfonds) 2027', en:'Emergency fund 2027'},
+  { id:'reserve', noPrio:true, quote:{de:'Benötigt genehmigten Wirtschaftsplan', en:'Needs approved Wirtschaftsplan (budget)'}, title:{de:'Rücklage (Notfallfonds) 2027', en:'Emergency fund 2027'},
     issue:{de:'Bei einem erwarteten Überschuss von ca. 30.000 €: Wie viel davon sollen wir 2027 in die Rücklage für Notfälle einzahlen?',
            en:'With an expected surplus of about €30,000: how much of it should we put into the emergency fund in 2027?'},
     opts:[
@@ -382,7 +382,7 @@ function renderInits(){
     });
     const myPrio = prios.filter(v => v.init === it.id);
     let prio = null;
-    if (prioReady){
+    if (prioReady && !it.noPrio){
       prio = document.createElement('div'); prio.className='prio';
       const pl = document.createElement('span'); pl.className='lbl'; pl.textContent = t.prioLabel;
       const seg = document.createElement('div'); seg.className='seg';
@@ -410,7 +410,7 @@ function renderInits(){
       names.forEach(v => { const p=document.createElement('span'); p.textContent = v.name + (v.unit ? ' ('+v.unit+')' : ''); g.append(p); });
       who.append(g);
     });
-    if (prioReady && myPrio.length){   // names grouped by the priority they gave
+    if (prioReady && !it.noPrio && myPrio.length){   // names grouped by the priority they gave
       const ph = document.createElement('div'); ph.className='grp'; const phb = document.createElement('b'); phb.textContent = t.prioHead; ph.append(phb); who.append(ph);
       ['high','medium','low'].forEach(pid => {
         const names = myPrio.filter(v => v.priority===pid).sort((a,b)=>a.name.localeCompare(b.name)); if (!names.length) return;
@@ -421,7 +421,7 @@ function renderInits(){
       });
     }
     det.append(who);
-    const flags = [it.flag ? it.flag[lang] : null, t.quoteFlag].filter(Boolean).map(txt => { const f=document.createElement('p'); f.className='flag'; f.textContent=txt; return f; });
+    const flags = [it.flag ? it.flag[lang] : null, it.quote ? it.quote[lang] : t.quoteFlag].filter(Boolean).map(txt => { const f=document.createElement('p'); f.className='flag'; f.textContent=txt; return f; });
     const parts = [head, ...flags, issue, opts];
     if (prio) parts.push(prio);
     card.append(...parts, det);
