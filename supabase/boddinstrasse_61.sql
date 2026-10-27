@@ -17,7 +17,7 @@ revoke insert, update, delete on public.boddinstrasse_61 from anon, authenticate
 create or replace function public.cast_vote(p_init text, p_opt text, p_name text, p_unit text default null)
 returns void language plpgsql security definer set search_path = public as $$
 declare
-  allowed jsonb := '{"reserve":["10k","20k","30k"],"buzzer":["fix","new","video","none"],"clean":["yes","no"],"door":["fix","new","none"],"legal":["continue","end"],"bikes":["yes","no"],"yard":["yes","no"],"elevator":["yes","no"],"cellar":["yes","no"]}';
+  allowed jsonb := '{"reserve":["10k","20k","30k"],"buzzer":["fix","new","video","none"],"clean":["no","h30","h60"],"door":["fix","new","none"],"legal":["continue","end"],"bikes":["yes","no"],"yard":["yes","no"],"elevator":["yes","no"],"cellar":["yes","no"]}';
   v_name text := btrim(coalesce(p_name, ''));
   v_unit text := nullif(btrim(coalesce(p_unit, '')), '');
 begin

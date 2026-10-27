@@ -200,12 +200,13 @@ const INITS = [
       {id:'new', de:'Neue Anlage (Audio)', en:'New buzzer system (audio)', lo:5000, hi:10000},
       {id:'video', de:'Neue Anlage mit Videokamera', en:'New buzzer with video camera', lo:8000, hi:15000},
       {id:'none', de:'Nichts ändern', en:'No change', lo:0, hi:0}]},
-  { id:'clean', title:{de:'Grundreinigung des ganzen Hauses', en:'Deep cleaning of the whole building'},
-    issue:{de:'Einmalige Grundreinigung von Treppenhäusern, Fluren, Eingang und Fenstern im Gemeinschaftsbereich, sobald die Bauarbeiten abgeschlossen sind. Geschätzt für ca. 500 m² zu 3–10 €/m².',
-           en:'One-time deep clean of stairwells, hallways, entrance and shared windows once construction is complete. Estimated for about 500 m² at €3–10 per m².'},
+  { id:'clean', noQuote:true, title:{de:'Grundreinigung des ganzen Hauses', en:'Deep cleaning of the whole building'},
+    issue:{de:'Einmalige Grundreinigung von Treppenhäusern, Fluren, Eingang und Fenstern im Gemeinschaftsbereich, sobald die Bauarbeiten abgeschlossen sind. Angebot von Cleaning Berlin City Helper: 60 Stunden für 3.000 €. Wir können es auf 30 Stunden für 1.500 € verkleinern.',
+           en:'One-time deep clean of stairwells, hallways, entrance and shared windows once construction is complete. Quote from Cleaning Berlin City Helper: 60 hours for €3,000. We can scale it back to 30 hours for €1,500.'},
     opts:[
-      {id:'yes', de:'Ja, Grundreinigung beauftragen', en:'Yes, book a deep clean', lo:1500, hi:5000},
-      {id:'no', de:'Nicht jetzt', en:'Not now', lo:0, hi:0}]},
+      {id:'no', de:'Nichts ändern', en:'No change', lo:0, hi:0},
+      {id:'h30', de:'30 Stunden Grundreinigung (reduziert)', en:'30-hour deep clean (scaled back)', lo:1500, hi:1500},
+      {id:'h60', de:'60 Stunden Grundreinigung (vollständiges Angebot)', en:'60-hour deep clean (full quote)', lo:3000, hi:3000}]},
   { id:'door', title:{de:'Haustür und Sicherheit', en:'Front door and security'},
     issue:{de:'Die Beschläge der Haustür lassen sich manipulieren. Wir können sie mit manipulationssicheren Beschlägen nachrüsten oder eine neue Sicherheitstür einbauen.',
            en:'The front door fittings can be tampered with. We can retrofit tamper-proof fittings or install a new security door.'},
@@ -421,7 +422,7 @@ function renderInits(){
       });
     }
     det.append(who);
-    const flags = [it.flag ? it.flag[lang] : null, it.quote ? it.quote[lang] : t.quoteFlag].filter(Boolean).map(txt => { const f=document.createElement('p'); f.className='flag'; f.textContent=txt; return f; });
+    const flags = [it.flag ? it.flag[lang] : null, it.quote ? it.quote[lang] : it.noQuote ? null : t.quoteFlag].filter(Boolean).map(txt => { const f=document.createElement('p'); f.className='flag'; f.textContent=txt; return f; });
     const parts = [head, ...flags, issue, opts];
     if (prio) parts.push(prio);
     card.append(...parts, det);
