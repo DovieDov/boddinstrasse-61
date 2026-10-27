@@ -351,7 +351,10 @@ function renderInits(){
   const t = T[lang], me = key(myName());
   const main = document.getElementById('inits');
   main.textContent = '';
-  INITS.forEach((it, i) => {
+  // most important first: high = 3, medium = 2, low = 1 points; the budget item stays on top, ties keep the original order
+  const score = it => prios.filter(v => v.init === it.id).reduce((n, v) => n + ({high:3, medium:2, low:1}[v.priority] || 0), 0);
+  const ranked = prioReady ? INITS.map((it, k) => ({it, k, s: it.noPrio ? Infinity : score(it)})).sort((x, y) => (y.s === x.s ? x.k - y.k : y.s - x.s)).map(x => x.it) : INITS;
+  ranked.forEach((it, i) => {
     const mine = votes.filter(v => v.init === it.id);
     const card = document.createElement('article'); card.className = 'init';
     const head = document.createElement('div'); head.className = 'init-head';
