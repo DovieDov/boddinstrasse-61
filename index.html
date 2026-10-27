@@ -50,9 +50,6 @@ p{margin:0}
 .total{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
 .issue{color:var(--muted);max-width:65ch}
 .flag{color:var(--alert);background:var(--alert-soft);border:1px solid var(--alert);border-radius:6px;padding:8px 10px;font-weight:700;font-size:14px}
-.steps{display:flex;flex-direction:column;gap:10px}
-.step{border-left:2px solid var(--line);padding:2px 0 2px 12px;display:flex;flex-direction:column;gap:2px;font-size:14px}
-.step .cost-line{color:var(--muted);font-size:13px}
 .scope{font-size:12px;font-weight:600;color:var(--warn)}
 .opts{display:flex;flex-direction:column;gap:8px}
 .opt{position:relative;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;text-align:left;width:100%;
@@ -229,28 +226,30 @@ const INITS = [
     opts:[
       {id:'yes', de:'Ja, zusätzlichen Fahrradständer aufstellen', en:'Yes, add a bike rack', lo:1500, hi:4000},
       {id:'no', de:'Nicht jetzt', en:'Not now', lo:0, hi:0}]},
-  { id:'yard', title:{de:'Verbesserung des Hinterhofs', en:'Courtyard improvement'},
-    issue:{de:'Der Hinterhof soll in vier Schritten schöner und besser nutzbar werden. Stimmen Sie ab, bis zu welchem Schritt wir gehen: Jede Wahl schließt alle Schritte davor ein (Wer Schritt 2 wählt, wählt auch Schritt 1).',
-           en:'Improve the courtyard in four steps so it looks better and is more useful. Vote for how far we go: each choice includes all the steps before it (choosing step 2 also includes step 1).'},
-    steps:[
-      {h:{de:'1. Aufräumen und Grundverbesserung', en:'1. Cleanout and basic improvements'},
-       p:{de:'Ein gemeinsamer Gartentag: Wir entfernen Müll, lockern die Erde und säen Wildblumen. So wird der Hof besser, und die Nachbarn lernen sich kennen.', en:'A communal garden day: residents remove rubbish, tidy the soil and plant wildflowers. It improves the shared space and lets neighbours get to know each other.'},
-       c:{de:'Gartentag: kaum Kosten (Material und Saatgut). Professionelle Räumung: Angebot nötig. Der Gartentag hält die Kosten niedrig.', en:'Garden day: minimal cost (materials and seeds). Professional cleanup: quote required. The community option keeps expenses down.'}},
-      {h:{de:'2. Müllplatz und Begrünung', en:'2. Recycling area and greenery'},
-       p:{de:'Der Müllplatz bekommt eine ansprechende Verkleidung für die Tonnen, dazu Grün.', en:'Improve the recycling area with an attractive structure that screens the bins, plus greenery.'},
-       c:{de:'Ca. 5.000–10.000 €, je nach Entwurf, Material und Einbau.', en:'About €5,000–€10,000, depending on design, materials and installation.'}},
-      {h:{de:'3. Bepflanzung und Grün', en:'3. Planting and greenery'},
-       p:{de:'Beete, Kletterpflanzen und eventuell ein Baum machen den Hof grüner. Pflanzen günstig über Kleinanzeigen, Spenden oder Beiträge der Nachbarn besorgen.', en:'Flower beds, climbing plants and possibly a tree make the courtyard greener. Source plants cheaply through Kleinanzeigen, donations or neighbours.'},
-       c:{de:'Kleine Pflanzen und Blumen: günstig oder gratis durch Spenden. Baum: ca. 2.000 €, je nach Größe und Standort. Weitere Bepflanzung: offen. Noch kein fester Gesamtbetrag.', en:'Small plants and flowers: low cost or free through donations. Tree: about €2,000, depending on size and site. Additional planting: to be determined. No fixed total yet.'}},
-      {h:{de:'4. Sitzplatz, Fahrradständer und Pflaster', en:'4. Seating, bicycle racks and paving'},
-       p:{de:'Mehr Nutzbarkeit durch Sitzplätze, Fahrradstellplätze und nötige Pflasterreparaturen.', en:'Make the courtyard more useful with seating, bicycle parking and necessary paving repairs.'},
-       c:{de:'Sitzbereich ca. 2.000 €. Fahrradständer 3.000–5.000 €. Pflaster: Angebot nötig. Bekannte Summe 5.000–7.000 € ohne Pflaster.', en:'Seating area about €2,000. Bicycle racks €3,000–€5,000. Paving: quote required. Known subtotal €5,000–€7,000, excluding paving.'}}],
+  { id:'yard1', title:{de:'Hinterhof, Schritt 1: Aufräumen und Grundverbesserung', en:'Courtyard, step 1: Cleanout and basic improvements'},
+    issue:{de:'Ein gemeinsamer Gartentag: Wir entfernen Müll, lockern die Erde und säen Wildblumen. So wird der Hof besser, und die Nachbarn lernen sich kennen. Der Gartentag hält die Kosten niedrig (Material und Saatgut). Eine professionelle Räumung bräuchte ein Angebot.',
+           en:'A communal garden day: residents remove rubbish, tidy the soil and plant wildflowers. It improves the shared space and lets neighbours get to know each other. The community option keeps expenses down (materials and seeds). A professional cleanup would need a quote.'},
     opts:[
-      {id:'no', de:'Nicht jetzt', en:'Not now', lo:0, hi:0},
-      {id:'s1', de:'Bis Schritt 1 (Aufräumen)', en:'Up to step 1 (cleanout)', lo:0, hi:0, note:{de:'Kaum Kosten, Angebot für professionelle Räumung nötig', en:'Minimal cost, quote needed for professional cleanup'}},
-      {id:'s2', de:'Bis Schritt 2 (enthält Schritt 1)', en:'Up to step 2 (includes step 1)', lo:5000, hi:10000},
-      {id:'s3', de:'Bis Schritt 3 (enthält Schritt 1 und 2)', en:'Up to step 3 (includes steps 1 and 2)', lo:5000, hi:10000, note:{de:'bekannt, Schritt 3 noch offen (Baum ca. 2.000 €)', en:'known so far, step 3 to be determined (tree about €2,000)'}},
-      {id:'s4', de:'Bis Schritt 4 (enthält Schritt 1 bis 3)', en:'Up to step 4 (includes steps 1 to 3)', lo:10000, hi:17000, note:{de:'bekannt, ohne Pflaster und Schritt 3', en:'known so far, excluding paving and step 3'}}]},
+      {id:'yes', de:'Ja, Gartentag organisieren', en:'Yes, organise the garden day', lo:0, hi:0, note:{de:'Kaum Kosten (Material und Saatgut)', en:'Minimal cost (materials and seeds)'}},
+      {id:'no', de:'Nicht jetzt', en:'Not now', lo:0, hi:0}]},
+  { id:'yard2', title:{de:'Hinterhof, Schritt 2: Müllplatz und Begrünung', en:'Courtyard, step 2: Recycling area and greenery'},
+    issue:{de:'Der Müllplatz bekommt eine ansprechende Verkleidung für die Tonnen, dazu Grün. Die Kosten hängen von Entwurf, Material und Einbau ab. Geschätzt: 5.000–10.000 €.',
+           en:'Improve the recycling area with an attractive structure that screens the bins, plus greenery. The final cost depends on design, materials and installation. Estimated: €5,000–€10,000.'},
+    opts:[
+      {id:'yes', de:'Ja, Müllplatz gestalten und begrünen', en:'Yes, screen and green the recycling area', lo:5000, hi:10000},
+      {id:'no', de:'Nicht jetzt', en:'Not now', lo:0, hi:0}]},
+  { id:'yard3', title:{de:'Hinterhof, Schritt 3: Bepflanzung und Grün', en:'Courtyard, step 3: Planting and greenery'},
+    issue:{de:'Beete, Kletterpflanzen und eventuell ein Baum machen den Hof grüner. Pflanzen günstig über Kleinanzeigen, Spenden oder Beiträge der Nachbarn besorgen. Kleine Pflanzen und Blumen: günstig oder gratis. Baum: ca. 2.000 €, je nach Größe und Standort. Weitere Bepflanzung: offen. Noch kein fester Gesamtbetrag.',
+           en:'Flower beds, climbing plants and possibly a tree make the courtyard greener. Source plants cheaply through Kleinanzeigen, donations or neighbours. Small plants and flowers: low cost or free. Tree: about €2,000, depending on size and site. Additional planting: to be determined. No fixed total yet.'},
+    opts:[
+      {id:'yes', de:'Ja, Beete und Pflanzen anlegen', en:'Yes, add planting and greenery', lo:0, hi:0, note:{de:'Noch kein Gesamtbetrag (Baum ca. 2.000 €)', en:'No total yet (tree about €2,000)'}},
+      {id:'no', de:'Nicht jetzt', en:'Not now', lo:0, hi:0}]},
+  { id:'yard4', title:{de:'Hinterhof, Schritt 4: Sitzplatz, Fahrradständer und Pflaster', en:'Courtyard, step 4: Seating, bicycle racks and paving'},
+    issue:{de:'Mehr Nutzbarkeit durch Sitzplätze, Fahrradstellplätze und nötige Pflasterreparaturen. Sitzbereich ca. 2.000 €. Fahrradständer 3.000–5.000 €. Pflaster: Angebot nötig. Bekannte Summe 5.000–7.000 € ohne Pflaster.',
+           en:'Make the courtyard more useful with seating, bicycle parking and necessary paving repairs. Seating area about €2,000. Bicycle racks €3,000–€5,000. Paving: quote required. Known subtotal €5,000–€7,000, excluding paving.'},
+    opts:[
+      {id:'yes', de:'Ja, Sitzplatz und Fahrradständer', en:'Yes, seating and bicycle racks', lo:5000, hi:7000, note:{de:'ohne Pflaster (Angebot nötig)', en:'excluding paving (quote needed)'}},
+      {id:'no', de:'Nicht jetzt', en:'Not now', lo:0, hi:0}]},
   { id:'elevator', front:true, title:{de:'Neuer Aufzug im Vorderhaus', en:'New elevator in the front building'},
     issue:{de:'Nur für Eigentümer im Vorderhaus. Ein nachgerüsteter Aufzug mit ca. 5 Haltestellen kostet geschätzt 90.000–165.000 €, dazu Wartung von 1.500–3.000 € pro Jahr.',
            en:'Front-building owners only. A retrofitted elevator with about 5 stops is estimated at €90,000–165,000, plus €1,500–3,000 a year for maintenance.'},
@@ -385,11 +384,6 @@ function renderInits(){
     if (it.front){ const s=document.createElement('span'); s.className='scope'; s.textContent=t.frontOnly; left.append(s); }
     head.append(left, tot);
     const issue = document.createElement('p'); issue.className='issue'; issue.textContent = it.issue[lang];
-    let steps = null;
-    if (it.steps){
-      steps = document.createElement('div'); steps.className='steps';
-      it.steps.forEach(st => { const d=document.createElement('div'); d.className='step'; const h=document.createElement('b'); h.textContent=st.h[lang]; const pp=document.createElement('p'); pp.textContent=st.p[lang]; const cc=document.createElement('p'); cc.className='cost-line'; cc.textContent=st.c[lang]; d.append(h,pp,cc); steps.append(d); });
-    }
     const opts = document.createElement('div'); opts.className='opts';
     const max = Math.max(1, ...it.opts.map(o => mine.filter(v => v.opt===o.id).length));
     it.opts.forEach(o => {
@@ -450,7 +444,7 @@ function renderInits(){
     }
     det.append(who);
     const flags = [it.flag ? it.flag[lang] : null, it.quote ? it.quote[lang] : it.noQuote ? null : t.quoteFlag].filter(Boolean).map(txt => { const f=document.createElement('p'); f.className='flag'; f.textContent=txt; return f; });
-    const parts = [head, ...flags, issue, ...(steps ? [steps] : []), opts];
+    const parts = [head, ...flags, issue, opts];
     if (prio) parts.push(prio);
     card.append(...parts, det);
     main.append(card);
