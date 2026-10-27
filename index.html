@@ -230,8 +230,8 @@ const INITS = [
       {id:'yes', de:'Ja, zusätzlichen Fahrradständer aufstellen', en:'Yes, add a bike rack', lo:1500, hi:4000},
       {id:'no', de:'Nicht jetzt', en:'Not now', lo:0, hi:0}]},
   { id:'yard', title:{de:'Verbesserung des Hinterhofs', en:'Courtyard improvement'},
-    issue:{de:'Der Hinterhof soll in vier Schritten schöner und besser nutzbar werden. Die Schätzung unten umfasst nur die bekannten Kosten aus Schritt 2 und 4 (ohne Pflasterarbeiten und ohne Schritt 3).',
-           en:'Improve the courtyard in four steps so it looks better and is more useful. The estimate below only covers the known costs of steps 2 and 4 (without paving and without step 3).'},
+    issue:{de:'Der Hinterhof soll in vier Schritten schöner und besser nutzbar werden. Stimmen Sie ab, bis zu welchem Schritt wir gehen: Jede Wahl schließt alle Schritte davor ein (Wer Schritt 2 wählt, wählt auch Schritt 1).',
+           en:'Improve the courtyard in four steps so it looks better and is more useful. Vote for how far we go: each choice includes all the steps before it (choosing step 2 also includes step 1).'},
     steps:[
       {h:{de:'1. Aufräumen und Grundverbesserung', en:'1. Cleanout and basic improvements'},
        p:{de:'Ein gemeinsamer Gartentag: Wir entfernen Müll, lockern die Erde und säen Wildblumen. So wird der Hof besser, und die Nachbarn lernen sich kennen.', en:'A communal garden day: residents remove rubbish, tidy the soil and plant wildflowers. It improves the shared space and lets neighbours get to know each other.'},
@@ -246,8 +246,11 @@ const INITS = [
        p:{de:'Mehr Nutzbarkeit durch Sitzplätze, Fahrradstellplätze und nötige Pflasterreparaturen.', en:'Make the courtyard more useful with seating, bicycle parking and necessary paving repairs.'},
        c:{de:'Sitzbereich ca. 2.000 €. Fahrradständer 3.000–5.000 €. Pflaster: Angebot nötig. Bekannte Summe 5.000–7.000 € ohne Pflaster.', en:'Seating area about €2,000. Bicycle racks €3,000–€5,000. Paving: quote required. Known subtotal €5,000–€7,000, excluding paving.'}}],
     opts:[
-      {id:'yes', de:'Ja, Hinterhof verbessern (Schritt 2 und 4)', en:'Yes, improve the courtyard (steps 2 and 4)', lo:10000, hi:17000},
-      {id:'no', de:'Nicht jetzt', en:'Not now', lo:0, hi:0}]},
+      {id:'no', de:'Nicht jetzt', en:'Not now', lo:0, hi:0},
+      {id:'s1', de:'Bis Schritt 1 (Aufräumen)', en:'Up to step 1 (cleanout)', lo:0, hi:0, note:{de:'Kaum Kosten, Angebot für professionelle Räumung nötig', en:'Minimal cost, quote needed for professional cleanup'}},
+      {id:'s2', de:'Bis Schritt 2 (enthält Schritt 1)', en:'Up to step 2 (includes step 1)', lo:5000, hi:10000},
+      {id:'s3', de:'Bis Schritt 3 (enthält Schritt 1 und 2)', en:'Up to step 3 (includes steps 1 and 2)', lo:5000, hi:10000, note:{de:'bekannt, Schritt 3 noch offen (Baum ca. 2.000 €)', en:'known so far, step 3 to be determined (tree about €2,000)'}},
+      {id:'s4', de:'Bis Schritt 4 (enthält Schritt 1 bis 3)', en:'Up to step 4 (includes steps 1 to 3)', lo:10000, hi:17000, note:{de:'bekannt, ohne Pflaster und Schritt 3', en:'known so far, excluding paving and step 3'}}]},
   { id:'elevator', front:true, title:{de:'Neuer Aufzug im Vorderhaus', en:'New elevator in the front building'},
     issue:{de:'Nur für Eigentümer im Vorderhaus. Ein nachgerüsteter Aufzug mit ca. 5 Haltestellen kostet geschätzt 90.000–165.000 €, dazu Wartung von 1.500–3.000 € pro Jahr.',
            en:'Front-building owners only. A retrofitted elevator with about 5 stops is estimated at €90,000–165,000, plus €1,500–3,000 a year for maintenance.'},
@@ -399,7 +402,7 @@ function renderInits(){
       if (isMine){ const m=document.createElement('span'); m.className='mine'; m.textContent=' · '+t.yours; name.append(m); }
       const cost = document.createElement('span'); cost.className='cost';
       const div = it.front ? FRONT_FLATS : FLATS;
-      cost.textContent = o.hi ? range(o.lo,o.hi,lang)+' · '+range(Math.round(o.lo/div/10)*10, Math.round(o.hi/div/10)*10, lang)+' '+(it.front?t.perFront:t.perFlat) : '–';
+      cost.textContent = (o.hi ? range(o.lo,o.hi,lang)+' · '+range(Math.round(o.lo/div/10)*10, Math.round(o.hi/div/10)*10, lang)+' '+(it.front?t.perFront:t.perFlat) : o.note ? '' : '–') + (o.note ? (o.hi ? ' · ' : '') + o.note[lang] : '');
       const cnt = document.createElement('span'); cnt.className='votes'; cnt.textContent = t.votes(n);
       b.append(fill, name, cnt, cost);
       b.addEventListener('click', () => castVote(it.id, o.id));
