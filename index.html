@@ -295,7 +295,7 @@ const T = {
     failed:'Die Stimme konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.',
     votes:n=> n===1?'1 Stimme':n+' Stimmen', total:n=>'Stimmen gesamt: '+n, perFlat:'pro Wohnung', perFront:'pro Wohnung im Vorderhaus (bei 15)',
     yours:'Ihre Wahl', who:'Wer hat abgestimmt?', nobody:'Noch keine Stimmen.', frontOnly:'Nur Vorderhaus',
-    budgetTitle:'Ausgaben 2026 und Budget 2027', budgetFlag:'Benötigt Matera-Bericht zu den erforderlichen Zusatzausgaben in diesem Jahr und den erwarteten Ausgaben für 2027', budgetLede:'Ausgaben vom 24. Februar bis 26. Oktober 2026 laut Kontoauszug.',
+    quoteFlag:'Benötigt offizielle Angebote', budgetTitle:'Ausgaben 2026 und Budget 2027', budgetFlag:'Benötigt Matera-Bericht zu den erforderlichen Zusatzausgaben in diesem Jahr und den erwarteten Ausgaben für 2027', budgetLede:'Ausgaben vom 24. Februar bis 26. Oktober 2026 laut Kontoauszug.',
     colType:'Art', colAmt:'Betrag', total26:'Gesamt', b27Title:'Realistisches Budget 2027',
     planTitle:'Plan 2026 und tatsächliche Ausgaben', planLede:'Was die Hausverwaltung für 2026 geplant hat und was bisher bezahlt wurde.', planCols:['Posten','Plan 2026','Bezahlt','% Plan'], planTotal:'Summe', planNoLine:'kein Planposten', planNoPay:'keine eigene Zahlung', planDash:'Ein Strich heißt: Dafür gibt es keinen passenden Planposten bzw. keine eigene Zahlung.', planFoot:'Plan ohne Heizung und ohne Zuführung zur Instandhaltungsrücklage', planNote:'Plan: Wirtschaftsplan 2026 der Hausverwaltung vom 4. Nov. 2025 (Gesamtkosten fürs Haus). Bisher bezahlt: Zahlungen vom 24. Feb. bis 26. Okt. 2026 laut Kontoauszug, also noch nicht das ganze Jahr. Die Zuordnung der Zahlungen zu den Planposten ist unsere Näherung: Mehrere Zahlungen, etwa an „Mehrere Dienstleister“, lassen sich keinem Planposten sicher zuordnen. Heizkosten werden nach Verbrauch abgerechnet und stehen nicht als Hausbetrag im Plan. Zusätzlich plant die Verwaltung 25.000 € Zuführung zur Instandhaltungsrücklage; das ist keine Ausgabe.',
     prioLabel:'Wie wichtig ist Ihnen das?', prioNames:{high:'Hoch',medium:'Mittel',low:'Niedrig'}, prioHead:'Priorität', prioCount:(h,m,l)=>'Hoch '+h+' · Mittel '+m+' · Niedrig '+l, prioSaved:'Ihre Priorität wurde gespeichert.',
@@ -311,7 +311,7 @@ const T = {
     failed:'Your vote couldn’t be saved. Please try again.',
     votes:n=> n===1?'1 vote':n+' votes', total:n=>'Total votes: '+n, perFlat:'per flat', perFront:'per front-building flat (if 15)',
     yours:'Your choice', who:'Who voted?', nobody:'No votes yet.', frontOnly:'Front building only',
-    budgetTitle:'2026 costs and 2027 budget', budgetFlag:'Needs Matera report on required extra spending this year and expected spending for 2027', budgetLede:'Outgoing payments from Feb 24 to Oct 26, 2026, from the bank statement.',
+    quoteFlag:'Needs official quotes', budgetTitle:'2026 costs and 2027 budget', budgetFlag:'Needs Matera report on required extra spending this year and expected spending for 2027', budgetLede:'Outgoing payments from Feb 24 to Oct 26, 2026, from the bank statement.',
     colType:'Type', colAmt:'Amount', total26:'Total', b27Title:'Realistic budget for 2027',
     planTitle:'2026 plan vs. actual spending', planLede:'What the management planned for 2026 and what has been paid so far.', planCols:['Item','Plan 2026','Paid','% plan'], planTotal:'Total', planNoLine:'no plan line', planNoPay:'no payment of its own', planDash:'A dash means there is no matching plan line, or no payment of its own.', planFoot:'Plan excludes heating and the transfer to the maintenance reserve', planNote:'Plan: the management’s 2026 Wirtschaftsplan of 4 Nov 2025 (whole-building totals). Paid so far: payments from 24 Feb to 26 Oct 2026 from the bank statement, so not the full year yet. How payments are matched to plan lines is our own approximation: several payments, for example to “Mehrere Dienstleister”, can’t be matched to a plan line with certainty. Heating is billed by consumption and is not in the plan as a building total. The management also plans a €25,000 transfer to the maintenance reserve; that is not an expense.',
     prioLabel:'How important is this to you?', prioNames:{high:'High',medium:'Medium',low:'Low'}, prioHead:'Priority', prioCount:(h,m,l)=>'High '+h+' · Medium '+m+' · Low '+l, prioSaved:'Your priority was saved.',
@@ -421,7 +421,8 @@ function renderInits(){
       });
     }
     det.append(who);
-    const parts = it.flag ? (() => { const f=document.createElement('p'); f.className='flag'; f.textContent=it.flag[lang]; return [head, f, issue, opts]; })() : [head, issue, opts];
+    const flags = [it.flag ? it.flag[lang] : null, t.quoteFlag].filter(Boolean).map(txt => { const f=document.createElement('p'); f.className='flag'; f.textContent=txt; return f; });
+    const parts = [head, ...flags, issue, opts];
     if (prio) parts.push(prio);
     card.append(...parts, det);
     main.append(card);
