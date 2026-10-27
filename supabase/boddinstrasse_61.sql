@@ -1,7 +1,7 @@
 -- Applied to Supabase project EMBER (dxyaceoaqbgirjwidofq) on 2026-10-26
 create table public.boddinstrasse_61 (
   id bigint generated always as identity primary key,
-  init text not null check (init in ('reserve','buzzer','clean','door','legal','bikes','yard','elevator','cellar')),
+  init text not null check (init in ('reserve','buzzer','clean','door','legal','bikes','yard','yard1','yard2','yard3','yard4','elevator','cellar')),
   opt text not null check (char_length(opt) between 1 and 20),
   name text not null check (char_length(btrim(name)) between 1 and 60),
   name_key text not null,
@@ -17,7 +17,7 @@ revoke insert, update, delete on public.boddinstrasse_61 from anon, authenticate
 create or replace function public.cast_vote(p_init text, p_opt text, p_name text, p_unit text default null)
 returns void language plpgsql security definer set search_path = public as $$
 declare
-  allowed jsonb := '{"reserve":["10k","20k","30k"],"buzzer":["fix","new","video","none"],"clean":["no","h30","h60"],"door":["fix","new","none"],"legal":["continue","end"],"bikes":["yes","no"],"yard":["no","s1","s2","s3","s4"],"elevator":["yes","no"],"cellar":["yes","no"]}';
+  allowed jsonb := '{"reserve":["10k","20k","30k"],"buzzer":["fix","new","video","none"],"clean":["no","h30","h60"],"door":["fix","new","none"],"legal":["continue","end"],"bikes":["yes","no"],"yard1":["yes","no"],"yard2":["yes","no"],"yard3":["yes","no"],"yard4":["yes","no"],"elevator":["yes","no"],"cellar":["yes","no"]}';
   v_name text := btrim(coalesce(p_name, ''));
   v_unit text := nullif(btrim(coalesce(p_unit, '')), '');
 begin
