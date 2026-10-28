@@ -288,7 +288,7 @@ const PLAN_RESERVE = 25000;
 const B27 = [
   {de:'Einnahmen: regelmäßige Hausgeldzahlungen', en:'Income: regular owner payments', lo:90700, hi:106400},
   {de:'Laufende Kosten (ohne Reparaturen und Anwalt)', en:'Running costs (without repairs and legal)', lo:-110000, hi:-110000},
-  {de:'Ergebnis pro Jahr', en:'Result per year', lo:-19300, hi:-3600, sum:true}
+  {de:'Ergebnis pro Jahr', en:'Result per year', lo:-19300, hi:-3600, sum:true, hide:true}   // still feeds 'available for projects', not shown
 ];
 const RESERVE = 53817.82, BUFFER = 10000;
 
@@ -476,7 +476,7 @@ function renderBudget(){
 
   const b = document.getElementById('b27'); b.textContent='';
   const h2 = b.insertRow(); [t.colType, t.colAmt].forEach((x,i)=>{const th=document.createElement('th');th.textContent=x;if(i)th.style.textAlign='right';h2.append(th);});
-  B27.forEach(r => { const row=b.insertRow(); if(r.sum) row.className='sum'+(r.hi<0?' neg':''); row.insertCell().textContent=r[lang]; const d=row.insertCell(); d.className='n'; d.textContent = r.lo===r.hi ? eur(r.lo,lang) : eur(r.lo,lang)+' … '+eur(r.hi,lang); });
+  B27.filter(r => !r.hide).forEach(r => { const row=b.insertRow(); if(r.sum) row.className='sum'+(r.hi<0?' neg':''); row.insertCell().textContent=r[lang]; const d=row.insertCell(); d.className='n'; d.textContent = r.lo===r.hi ? eur(r.lo,lang) : eur(r.lo,lang)+' … '+eur(r.hi,lang); });
 
   const k = document.getElementById('kpis'); k.textContent='';
   const lo = RESERVE + B27[2].lo - BUFFER, hi = RESERVE + B27[2].hi - BUFFER;
