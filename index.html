@@ -177,8 +177,6 @@ tr.neg td.n{color:var(--warn)}
     <a href="https://bau.de/text/260724-einbruchschutz-haustuer-nachruesten-flexibilitaet">bau.de – Einbruchschutz Haustür nachrüsten</a>
     <a href="https://www.bauexpertenforum.de/threads/haustuer-mit-4er-briefkastenanlage-im-seitenteil-preis.116227/">bauexpertenforum.de – Haustür Mehrfamilienhaus Angebote</a>
     <a href="https://www.berliner-mieterverein.de/magazin/online/mm0308/030821.htm">berliner-mieterverein.de – Fahrradabstellanlagen</a>
-    <a href="https://www.hausjournal.net/personenaufzug-kosten-preis">hausjournal.net – Personenaufzug Kosten</a>
-    <a href="https://www.homeday.de/de/immobilienwissen/aufzugskosten/">homeday.de – Aufzugskosten</a>
   </section>
 </div>
 
@@ -246,12 +244,6 @@ const INITS = [
       {id:'s2', de:'Bis Schritt 2 (enthält Schritt 1)', en:'Up to step 2 (includes step 1)', lo:5500, hi:10500},
       {id:'s3', de:'Bis Schritt 3 (enthält Schritt 1 und 2)', en:'Up to step 3 (includes steps 1 and 2)', lo:5500, hi:10500, note:{de:'geschätzt, Schritt 3 noch offen (Baum ca. 2.000 €)', en:'estimated, step 3 to be determined (tree about €2,000)'}},
       {id:'s4', de:'Bis Schritt 4 (enthält Schritt 1 bis 3)', en:'Up to step 4 (includes steps 1 to 3)', lo:10500, hi:17500, note:{de:'geschätzt, ohne Pflaster und Schritt 3', en:'estimated, excluding paving and step 3'}}]},
-  { id:'elevator', front:true, title:{de:'Neuer Aufzug im Vorderhaus', en:'New elevator in the front building'},
-    issue:{de:'Nur für Eigentümer im Vorderhaus. Ein nachgerüsteter Aufzug mit ca. 5 Haltestellen kostet geschätzt 90.000–165.000 €, dazu Wartung von 1.500–3.000 € pro Jahr.',
-           en:'Front-building owners only. A retrofitted elevator with about 5 stops is estimated at €90,000–165,000, plus €1,500–3,000 a year for maintenance.'},
-    opts:[
-      {id:'yes', de:'Ja, Aufzug bezahlen', en:'Yes, pay for the elevator', lo:90000, hi:165000},
-      {id:'no', de:'Nein', en:'No', lo:0, hi:0}]},
   { id:'cellar', title:{de:'Gemeinschaftskeller (30 Parteien)', en:'Shared cellar (30 flats)'},
     issue:{de:'Der Keller muss saniert und gründlich entrümpelt werden, inklusive Abtransport und Reinigung. Genannt wurden uns ca. 7.000 € pro Wohnung.',
            en:'The cellar needs renovating and a big clear-out, including hauling everything away and cleaning. We were told about €7,000 per flat.'},
@@ -315,7 +307,7 @@ const T = {
     planTitle:'Plan 2026 und tatsächliche Ausgaben', planLede:'Was die Hausverwaltung für 2026 geplant hat und was bisher bezahlt wurde.', planCols:['Posten','Plan 2026','Bezahlt','% Plan'], planTotal:'Summe', planNoLine:'kein Planposten', planNoPay:'keine eigene Zahlung', planDash:'Ein Strich heißt: Dafür gibt es keinen passenden Planposten bzw. keine eigene Zahlung.', planFoot:'Plan ohne Heizung und ohne Zuführung zur Instandhaltungsrücklage', planNote:'Plan: Wirtschaftsplan 2026 der Hausverwaltung vom 4. Nov. 2025 (Gesamtkosten fürs Haus). Bisher bezahlt: Zahlungen vom 24. Feb. bis 26. Okt. 2026 laut Kontoauszug, also noch nicht das ganze Jahr. Die Zuordnung der Zahlungen zu den Planposten ist unsere Näherung: Mehrere Zahlungen, etwa an „Mehrere Dienstleister“, lassen sich keinem Planposten sicher zuordnen. Heizkosten werden nach Verbrauch abgerechnet und stehen nicht als Hausbetrag im Plan. Zusätzlich plant die Verwaltung 25.000 € Zuführung zur Instandhaltungsrücklage; das ist keine Ausgabe.',
     prioLabel:'Wie wichtig ist Ihnen das?', prioNames:{high:'Hoch',medium:'Mittel',low:'Niedrig'}, prioHead:'Priorität', prioCount:(h,m,l)=>'Hoch '+h+' · Mittel '+m+' · Niedrig '+l, prioSaved:'Ihre Priorität wurde gespeichert.',
     kRes:'Rücklage heute', kGap:'Erwartetes Ergebnis 2027', kAvail:'Verfügbar für Maßnahmen 2027',
-    b27Note:'Schätzung: Einnahmen aus den regelmäßigen Monatszahlungen (untere Grenze) bzw. dem Durchschnitt 2026 inkl. Nachzahlungen (obere Grenze). Laufende Kosten = Ausgaben 2026 ohne Reparaturen und Anwalt, auf 12 Monate hochgerechnet; die großen Einmalbuchungen (Matera 8.058,68 € und 6.868,68 €, Mehrere Dienstleister 12.837,60 €) einmal pro Jahr gezählt. Verfügbar = Rücklage minus erwartetes Defizit minus 10.000 € Sicherheitspuffer. Der Aufzug müsste gesondert von den Eigentümern im Vorderhaus finanziert werden.',
+    b27Note:'Schätzung: Einnahmen aus den regelmäßigen Monatszahlungen (untere Grenze) bzw. dem Durchschnitt 2026 inkl. Nachzahlungen (obere Grenze). Laufende Kosten = Ausgaben 2026 ohne Reparaturen und Anwalt, auf 12 Monate hochgerechnet; die großen Einmalbuchungen (Matera 8.058,68 € und 6.868,68 €, Mehrere Dienstleister 12.837,60 €) einmal pro Jahr gezählt. Verfügbar = Rücklage minus erwartetes Defizit minus 10.000 € Sicherheitspuffer.',
     srcTitle:'Quellen der Kostenschätzungen', srcNote:'Gebäudeannahmen: 30 Wohnungen, ca. 500 m² Gemeinschaftsflächen, Vorderhaus mit ca. 15 Wohnungen und 5 Etagen.'},
   en:{eyebrow:'Owners · Vote 2027', title:'House Vote 2027',
     lede:'Please vote on each initiative: enter your name and click an option. All votes show up right away, by name. Costs are estimates from German price guides, not quotes. Below are the 2026 costs and a realistic budget for 2027.',
@@ -331,7 +323,7 @@ const T = {
     planTitle:'2026 plan vs. actual spending', planLede:'What the management planned for 2026 and what has been paid so far.', planCols:['Item','Plan 2026','Paid','% plan'], planTotal:'Total', planNoLine:'no plan line', planNoPay:'no payment of its own', planDash:'A dash means there is no matching plan line, or no payment of its own.', planFoot:'Plan excludes heating and the transfer to the maintenance reserve', planNote:'Plan: the management’s 2026 Wirtschaftsplan of 4 Nov 2025 (whole-building totals). Paid so far: payments from 24 Feb to 26 Oct 2026 from the bank statement, so not the full year yet. How payments are matched to plan lines is our own approximation: several payments, for example to “Mehrere Dienstleister”, can’t be matched to a plan line with certainty. Heating is billed by consumption and is not in the plan as a building total. The management also plans a €25,000 transfer to the maintenance reserve; that is not an expense.',
     prioLabel:'How important is this to you?', prioNames:{high:'High',medium:'Medium',low:'Low'}, prioHead:'Priority', prioCount:(h,m,l)=>'High '+h+' · Medium '+m+' · Low '+l, prioSaved:'Your priority was saved.',
     kRes:'Reserve today', kGap:'Expected result 2027', kAvail:'Available for projects in 2027',
-    b27Note:'Estimate: income from regular monthly payments (low end) or the 2026 average including catch-up payments (high end). Running costs are 2026 costs without repairs and legal, scaled to 12 months, with the large one-off debits (Matera €8,058.68 and €6,868.68, Mehrere Dienstleister €12,837.60) counted once a year. Available = reserve minus the expected shortfall minus a €10,000 safety buffer. The elevator would need separate funding from the front-building owners.',
+    b27Note:'Estimate: income from regular monthly payments (low end) or the 2026 average including catch-up payments (high end). Running costs are 2026 costs without repairs and legal, scaled to 12 months, with the large one-off debits (Matera €8,058.68 and €6,868.68, Mehrere Dienstleister €12,837.60) counted once a year. Available = reserve minus the expected shortfall minus a €10,000 safety buffer.',
     srcTitle:'Sources for the cost estimates', srcNote:'Building assumptions: 30 flats, about 500 m² of shared areas, front building with about 15 flats and 5 floors.'}
 };
 
